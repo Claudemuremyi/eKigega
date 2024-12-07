@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static custom_filters %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold">Products</h1>
+</div>
+
+<div class="mb-4 flex justify-between items-center">
+    <div class="space-x-2">
+        <!-- Import Products Button -->
+        <a href="{% url 'import_products' %}" class="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded transition-colors duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 11-2 0V5H5v10h4a1 1 0 110 2H4a1 1 0 01-1-1V4zm10.707 4.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L12.414 12H17a1 1 0 100-2h-4.586l1.293-1.293z" clip-rule="evenodd" />
+            </svg>
+            Import Products
+        </a>
+
+        <!-- Export Products Button -->
+        <a href="{% url 'export_products' %}" class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded transition-colors duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M17 4a1 1 0 00-1-1H4a1 1 0 00-1 1v2a1 1 0 102 0V5h10v10h-4a1 1 0 100 2h5a1 1 0 001-1V4zm-7.707 6.707a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L7.586 10H3a1 1 0 100 2h4.586l-1.293 1.293a1 1 0 101.414 1.414l3-3z" clip-rule="evenodd" />
+            </svg>
+            Export Products
+        </a>
+    </div>
+
+    <!-- Add New Product Button -->
+    <a href="{% url 'product_create' %}" class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+        </svg>
+        Add New Product
+    </a>
+    <!-- Hadoop Analysis Button -->
+            <a href="{% url 'hadoop_analysis' %}" class="inline-flex items-center px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white font-medium rounded transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 12v3c0 1.657 3.134 3 7 3s7-1.343 7-3v-3c0 1.657-3.134 3-7 3s-7-1.343-7-3z" />
+                    <path d="M3 7v3c0 1.657 3.134 3 7 3s7-1.343 7-3V7c0 1.657-3.134 3-7 3S3 8.657 3 7z" />
+                    <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z" />
+                </svg>
+                Hadoop Analysis
+            </a>
+</div>
+
+
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border rounded-lg">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">NAME</th>
+                <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">PRICE</th>
+                <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">STOCK</th>
+                <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">STATUS</th>
+                <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr class="border-t">
+                <td class="py-3 px-4">{{ product.name }}</td>
+                <td class="py-3 px-4">{{ product.price|currency }}</td>
+                <td class="py-3 px-4">
+                    <form class="update-stock-form" data-product-id="{{ product.id }}">
+                        {% csrf_token %}
+                        <div class="flex items-center">
+                            <input type="number" name="new_quantity" value="{{ product.stock_quantity }}" min="0" 
+                                class="w-16 p-2 border rounded-l focus:outline-none focus:ring-1 focus:ring-gray-300">
+                            <button type="submit" class="px-3 py-2 bg-green-200 hover:bg-green-300 text-gray-700 font-medium rounded-r border-l">
+                                Update
+                            </button>
+                        </div>
+                    </form>
+                </td>
+                <td class="py-3 px-4">
+                    {% if product.stock_quantity > product.low_stock_threshold %}
+                    <span class="bg-green-100 text-green-700 py-1 px-3 rounded text-sm">In Stock</span>
+                    {% else %}
+                    <span class="bg-red-100 text-red-700 py-1 px-3 rounded text-sm">Low Stock</span>
+                    {% endif %}
+                </td>
+                <td class="py-3 px-4">
+                    <div class="flex items-center space-x-2">
+                        <!-- View Button with Icon -->
+                        <a href="{% url 'product_detail' product.id %}" class="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded text-sm inline-flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 3a7 7 0 016.857 9.134c-.36.978-1.25 1.466-2.217 1.866a12.12 12.12 0 01-2.64.626c-.77.095-1.571.15-2.435.15s-1.665-.055-2.435-.15a12.12 12.12 0 01-2.64-.626c-.967-.4-1.857-.888-2.217-1.866A7 7 0 0110 3zm0 2a5 5 0 00-4.857 6.066c.18.49.565.808 1.014 1.057.85.467 1.86.818 3.039 1.05.594.112 1.219.177 1.804.177s1.21-.065 1.804-.177c1.179-.232 2.189-.583 3.039-1.05.449-.249.834-.567 1.014-1.057A5 5 0 0010 5zm0 3a1 1 0 110 2 1 1 0 010-2z" clip-rule="evenodd" />
+                            </svg>
+                            View
+                        </a>
+                        
+                        <!-- Edit Button with Icon -->
+                        <a href="{% url 'product_update' product.id %}" class="px-3 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded text-sm inline-flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M17.414 2.586a2 2 0 00-2.828 0L5 12.172V15a1 1 0 001 1h2.828l9.586-9.586a2 2 0 000-2.828zM6 16H4a2 2 0 01-2-2v-2a1 1 0 01.293-.707l9.586-9.586a4 4 0 015.656 5.656L6.707 16H6z" />
+                            </svg>
+                            Edit
+                        </a>
+                        
+                        
+                        <!-- Delete Button with Icon -->
+                        <a href="{% url 'product_delete' product.pk %}" class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded text-sm inline-flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" />
+                            </svg>
+                            Delete
+                        </a>
+                        
+                    </div>
+                </td>
+                
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="py-8 px-4 text-center text-gray-500">No products available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('.update-stock-form').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var productId = form.data('product-id');
+        var newQuantity = form.find('input[name="new_quantity"]').val();
+
+        $.ajax({
+            url: "{% url 'update_stock' %}",
+            method: "POST",
+            data: {
+                product_id: productId,
+                new_quantity: newQuantity,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert("Stock updated successfully.");
+                    location.reload();
+                } else {
+                    alert("Error updating stock.");
+                }
+            },
+            error: function() {
+                alert("An error occurred. Please try again.");
+            },
+        });
+    });
+});
+</script>
+{% endblock %}

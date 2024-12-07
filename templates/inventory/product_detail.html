@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">{{ product.name }}</h1>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Product Details</h5>
+                <table class="table">
+                    <tr>
+                        <th>Description:</th>
+                        <td>{{ product.description }}</td>
+                    </tr>
+                    <tr>
+                        <th>Price:</th>
+                        <td>{{ product.price|currency }}</td>
+                    </tr>
+                    <tr>
+                        <th>Current Stock:</th>
+                        <td>{{ product.stock_quantity }}</td>
+                    </tr>
+                    <tr>
+                        <th>Low Stock Threshold:</th>
+                        <td>{{ product.low_stock_threshold }}</td>
+                    </tr>
+                    <tr>
+                        <th>Created At:</th>
+                        <td>{{ product.created_at }}</td>
+                    </tr>
+                    <tr>
+                        <th>Last Updated:</th>
+                        <td>{{ product.updated_at }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'product_update' product.pk %}" class="btn btn-warning">Edit</a>
+        <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger">Delete</a>
+        <a href="{% url 'product_list' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+{% endblock %}

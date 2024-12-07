@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Export Products</h1>
+<form method="get" action="{% url 'export_products' %}" class="mb-4">
+    {{ form.as_p }}
+    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        Export
+    </button>
+    <a href="{% url 'product_list' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2">
+        Cancel
+    </a>
+</form>
+{% endblock %}
+

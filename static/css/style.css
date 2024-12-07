@@ -1,0 +1,28 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.table th {
+    background-color: #f8f9fa;
+}
+
+.btn-sm {
+    margin-right: 5px;
+}
+
+.update-stock-form {
+    display: flex;
+    align-items: center;
+}
+
+.update-stock-form input {
+    width: 60px;
+    margin-right: 5px;
+}
+
